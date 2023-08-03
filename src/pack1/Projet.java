@@ -16,6 +16,10 @@ import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.awt.event.ActionEvent;
 
 public class Projet extends JFrame {
@@ -104,6 +108,12 @@ public class Projet extends JFrame {
 		mdp2.setBounds(141, 148, 167, 19);
 		contentPane.add(mdp2);
 		
+		JLabel message = new JLabel("");
+		message.setForeground(new Color(255, 102, 0));
+		message.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		message.setBounds(41, 180, 267, 13);
+		contentPane.add(message);
+		
 		JLabel lblConfirmation = new JLabel("Confirmation ");
 		lblConfirmation.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblConfirmation.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -117,27 +127,70 @@ public class Projet extends JFrame {
 				prenom.setText("");
 				mdp.setText("");
 				mdp2.setText("");
+				message.setText("");
 			}
 		});
 		btnAnnuler.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnAnnuler.setBounds(211, 202, 97, 21);
 		contentPane.add(btnAnnuler);
 		
+	
+		
 		JButton btnConfirmer = new JButton("Confirmer");
 		btnConfirmer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("bouton pressé");
+				message.setText("J'écris un message");
 				
+				if (!mdp.getText().equals(mdp2.getText())) {
+					System.out.println("pb mdp : " + mdp.getText() + "," + mdp2.getText());
+					message.setText("Les mots de passe ne correspondent pas !");
+					mdp.setText("");
+					mdp2.setText("");
+				} else {
+					System.out.println(nom.getText() + "," + prenom.getText() + "," + mdp.getText());
+					ecrireBD(nom.getText(),prenom.getText(),mdp.getText());
+				}
 			}
 		});
 		btnConfirmer.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnConfirmer.setBounds(86, 202, 98, 21);
 		contentPane.add(btnConfirmer);
 		
-		JLabel message = new JLabel("");
-		message.setForeground(new Color(255, 102, 0));
-		message.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		message.setBounds(41, 180, 267, 13);
-		contentPane.add(message);
+	
 	}
+	
+	static void ecrireBD(String nom, String prenom, String mdp) {
+        String url = "jdbc:mysql://192.168.1.100:3306/MaBase";
+        String user = "user2";
+        String password = "password";
+
+     // Établissement de la connexion à la base de données
+        try {
+            // Enregistrement du pilote MySQL
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Établissement de la connexion à la base de données
+            Connection connection = DriverManager.getConnection(url, user, password);
+
+            System.out.println("GetConnection ok");
+            
+            // Création de l'instruction d'insertion
+	        String insertQuery = 
+	        		"INSERT INTO Clients (nomCli, prenomCli, mdpCli) "
+	        		+ "VALUES ('" + nom + "', '" + prenom + "', '"+ mdp +"')";
+	        System.out.println(insertQuery);
+	        Statement stmt = connection.createStatement();
+
+	        // Exécution de l'instruction d'insertion
+	        int rowsAffected = stmt.executeUpdate(insertQuery);
+	        System.out.println(rowsAffected + " ligne(s) insérée(s) avec succès.");
+	        
+
+        // Fermeture de la connexion
+        connection.close();
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
