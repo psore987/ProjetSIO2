@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public class BaseD {
 
-	public static void main(String[] args) {
+ static void ecrireBD(String nom, String prenom, String mdp) {
         String url = "jdbc:mysql://192.168.1.100:3306/MaBase";
         String user = "user2";
         String password = "password";
@@ -24,7 +24,9 @@ public class BaseD {
             System.out.println("GetConnection ok");
             
         // Création de l'instruction d'insertion
-        String insertQuery = "INSERT INTO Clients (nomCli, prenomCli, mdpCli) VALUES ('nom', 'prénom', 'mdp')";
+        String insertQuery = 
+        		"INSERT INTO Clients (nomCli, prenomCli, mdpCli) "
+        		+ "VALUES (" + nom + ", " + prenom + ", "+ mdp +" )";
         Statement stmt = connection.createStatement();
 
         // Exécution de l'instruction d'insertion

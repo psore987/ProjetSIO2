@@ -1,6 +1,6 @@
 package pack1;
 
-import java.awt.EventQueue;
+
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -125,7 +126,8 @@ public class Projet extends JFrame {
 		JButton btnConfirmer = new JButton("Confirmer");
 		btnConfirmer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ajoutBDD();
+				System.out.println("bouton pressé");
+				
 			}
 		});
 		btnConfirmer.setFont(new Font("Tahoma", Font.BOLD, 12));
